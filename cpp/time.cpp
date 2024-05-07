@@ -25,6 +25,23 @@ void foo(int a, Person *p) {
   }
 }
 
+template <typename T = std::chrono::seconds> class Timer {
+  using Tp = std::chrono::time_point<std::chrono::high_resolution_clock>;
+  Tp m_start;
+  Tp m_stop;
+
+public:
+  void start() { m_start = std::chrono::high_resolution_clock::now(); }
+  void stop() { m_stop = std::chrono::high_resolution_clock::now(); }
+
+  T difference() { return std::chrono::duration_cast<T>(m_stop - m_start); }
+  void report(std::string msg) {
+    std::cout << msg << difference().count() << '\n';
+  }
+  // TODO: reset function
+};
+
+
 int main() {
   Person p;
 

@@ -5,12 +5,26 @@
 #include <string>
 #include <typeinfo>
 #include <vector>
+#include <any>
 
 struct layer {
   std::string name;
   int input;
   int output;
 };
+
+void any_free(std::any a) {
+  if (a.type() == typeid(std::vector<int8_t>*)) {
+    std::vector<int8_t> *dd = std::any_cast<std::vector<int8_t>*>(a);
+    delete dd;
+  } else if (a.type() == typeid(std::vector<int>*)) {
+    std::cout << "freeing\n";
+    std::vector<int> *dd = std::any_cast<std::vector<int>*>(a);
+    delete dd;
+  } else {
+    std::cout << "no match\n";
+  }
+}
 
 struct TypelessVec {
   void *data;
@@ -73,7 +87,18 @@ void run_quant(std::vector<TypelessVec> &arr, layer &l) {
   }
 }
 
+template <typename T>
+class Parent {
+  T data;
+};
+
+template <typename T>
+class Child : public Parent<T> {
+
+};
+
 int main() {
+#if 0
   std::vector<TypelessVec> arr(16);
 
   std::vector<int16_t> *ifmap = new std::vector<int16_t>(32);
@@ -100,4 +125,10 @@ int main() {
     std::cout << (int) i << ' ';
   }
   std::cout << '\n';
+#endif
+  Parent<int8_t> *p = new Child<int8_t>();
+  std::any t = p;
+  if (t.type() == typeid(Parent<int8_t>*)) {
+    std::cout << "type matches \n";
+  }
 }

@@ -16,6 +16,9 @@ class Person {
     }
 };
 
+void foo(int i, int j, int k, int l) {
+}
+
 class Bar {
   public:
   void foo(int a, Person *p, Person &pref) {
@@ -67,6 +70,7 @@ foo (10 instances, threaded): 450ms
 #endif
 
 int main() {
+#if 0
   Person p;
   const int times = 8;
 
@@ -89,4 +93,5 @@ int main() {
   ms_double = t2 - t1;
   std::cout << "Serial: " << ms_double.count() << "ms\n";
   return 0;
+#endif
 }
